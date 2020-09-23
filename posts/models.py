@@ -7,6 +7,7 @@ def slugify(s):
     patterns = r'[^\w+]'
     return re.sub(patterns, '-', s).lower()
 
+
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(256))
