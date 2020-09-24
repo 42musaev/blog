@@ -1,11 +1,33 @@
 from flask import Blueprint
 from flask import render_template
 from flask import request
+from flask import redirect, url_for
 
 from .models import Post, Tag
-# from sqlalchemy import func
+from app import db
+from .forms import PostForm
 
 posts = Blueprint('posts', __name__, template_folder='templates')
+
+
+@posts.route('/create', methods=['GET', 'POST'])
+def create_post():
+
+    if request.method == 'POST':
+        title = request.form['title']
+        body = request.form['body']
+
+        try:
+            post = Post(title=title, body=body)
+            db.session.add(post)
+            db.session.commit()
+            slug = post.slug
+        except Exception as e:
+            print(f'Some thing wrong: {e}')
+        return redirect(url_for('posts.post_detail', slug=slug))
+
+    form = PostForm()
+    return render_template('posts/create_post.html', form=form)
 
 
 @posts.route('/')
