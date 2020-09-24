@@ -29,8 +29,7 @@ class Post(db.Model):
     tags = db.relationship(
         'Tag',
         secondary=post_tags,
-        backref=db.backref('posts'),
-        lazy='dynamic'
+        backref=db.backref('posts', lazy='dynamic')
     )
 
     def generate_slug(self):
