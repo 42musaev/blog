@@ -46,7 +46,7 @@ def index():
         )
     else:
         posts = Post.query.order_by(Post.created.desc())
-    pages = posts.paginate(page=page, per_page=2)
+    pages = posts.paginate(page=page, per_page=6)
     return render_template(
         'posts/index.html',
         posts=posts,
