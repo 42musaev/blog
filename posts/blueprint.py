@@ -30,6 +30,20 @@ def create_post():
     return render_template('posts/create_post.html', form=form)
 
 
+@posts.route('/<slug>/edit', methods=['GET', 'POST'])
+def post_edit(slug):
+    post = Post.query.filter(Post.slug == slug).first()
+
+    if request.method == 'POST':
+        form = PostForm(formdata=request.form, obj=post)
+        form.populate_obj(post)
+        db.session.commit()
+        return redirect(url_for('posts.post_detail', slug=slug))
+
+    form = PostForm(obj=post)
+    return render_template('posts/post_edit.html', form=form, post=post)
+
+
 @posts.route('/')
 def index():
     query = request.args.get('query')
