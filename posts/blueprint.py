@@ -36,7 +36,7 @@ def create_post():
 @posts.route('/<slug>/edit', methods=['GET', 'POST'])
 @login_required
 def post_edit(slug):
-    post = Post.query.filter(Post.slug == slug).first()
+    post = Post.query.filter(Post.slug == slug).first_or_404()
 
     if request.method == 'POST':
         form = PostForm(formdata=request.form, obj=post)
@@ -75,12 +75,12 @@ def index():
 
 @posts.route('/<slug>')
 def post_detail(slug):
-    post = Post.query.filter(Post.slug == slug).first()
+    post = Post.query.filter(Post.slug == slug).first_or_404()
     return render_template('posts/post_detail.html', post=post)
 
 
 @posts.route('tag/<slug>')
 def tag_posts(slug):
-    tag = Tag.query.filter(Tag.slug == slug).first()
+    tag = Tag.query.filter(Tag.slug == slug).first_or_404()
     posts = tag.posts.all()
     return render_template('posts/tag_posts.html', tag=tag, posts=posts)
