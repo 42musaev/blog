@@ -6,7 +6,7 @@ Blog
 
 {% block content %}
 <h1 class="mb-5">Posts</h1>
-<a href="{{ url_for('posts.create_post') }}"><button type="button" class="btn btn-success">Create post</button></a>
+{% if current_user.has_role('admin') %}<a href="{{ url_for('posts.create_post') }}"><button type="button" class="btn btn-success">Create post</button></a>{% endif %}
 <div class="row mt-2">
     {% for post in pages.items %}
     <div class="col-md-4">
@@ -18,7 +18,7 @@ Blog
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="btn-group">
                         <a href="{{ url_for('posts.post_detail', slug=post.slug) }}" class="btn btn-sm btn-outline-secondary">View</a>
-                        <a href="{{ url_for('posts.post_edit', slug=post.slug) }}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                        {% if current_user.has_role('admin') %}<a href="{{ url_for('posts.post_edit', slug=post.slug) }}" class="btn btn-sm btn-outline-secondary">Edit</a>{% endif %}    
                     </div>
                     <small class="text-muted">{{ post.created.strftime('%Y-%m-%d') }}</small>
                 </div>
@@ -28,6 +28,7 @@ Blog
     {% endfor %}
 </div>
 <nav aria-label="Page navigation example">
+    {% if pages.pages > 1 %}
     <ul class="pagination">
         <li class="page-item {% if not pages.has_prev %}disabled{% endif %}"><a class="page-link" href="./?page={{ pages.prev_num }}{% if query %}&query={{ query }}{% endif %}">Previous</a></li>
         {% if pages.has_prev %}<li class="page-item"><a class="page-link" href="./?page={{ pages.page - 1 }}{% if query %}&query={{ query }}{% endif %}">{{ pages.page - 1 }}</a></li>{% endif %}
@@ -35,6 +36,7 @@ Blog
         {% if pages.has_next %}<li class="page-item"><a class="page-link" href="./?page={{ pages.page + 1 }}{% if query %}&query={{ query }}{% endif %}">{{ pages.page + 1 }}</a></li>{% endif %}
         <li class="page-item {% if not pages.has_next %}disabled{% endif %}"><a class="page-link" href="./?page={{ pages.next_num }}{% if query %}&query={{ query }}{% endif %}">Next</a></li>
     </ul>
+    {% endif %}
 </nav>
 
 {% endblock %}
